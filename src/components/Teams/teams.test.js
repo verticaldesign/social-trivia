@@ -154,6 +154,22 @@ describe('Given `Teams`' ,() => {
 
                         })
 
+                        describe('When either button is clicked', () => {
+
+                            it('should call `updateTeam`', () => {
+
+                                component.find('decrement-team-score-button').simulate('click')
+
+                                sinon.assert.calledOnce(updateTeamSpy)
+
+                                component.find('increment-team-score-button').simulate('click')
+
+                                sinon.assert.calledTwice(updateTeamSpy)                                
+
+                            })
+
+                        })
+
                     })
 
                 })

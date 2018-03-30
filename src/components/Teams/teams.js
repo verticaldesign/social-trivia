@@ -101,9 +101,9 @@ export class Teams extends Component {
                                                 <span className="team-score">{team.score || 0}</span>
                                             ) : (
                                                 <span className="team-score">
-                                                    <button className="button team-score-button" onClick={() => { updateTeam(-1, team.id) }}>-</button>
+                                                    <button className="button decrement-team-score-button" onClick={() => { updateTeam(-1, team.id) }}>-</button>
                                                         {team.score || 0}       
-                                                    <button className="button team-score-button" onClick={() => { updateTeam(1, team.id) }}>+</button>    
+                                                    <button className="button increment-team-score-button" onClick={() => { updateTeam(1, team.id) }}>+</button>    
                                                 </span>                                                                                         
                                             )}
                                         </div>
