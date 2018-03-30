@@ -14,7 +14,7 @@ const millisecondsInADay = 86400000;
 
 function updateTeams() {
 
-    const { teams, updateTeam, submitTeamScoreToDB, toggleShowAnswers, isShowingAnswers } = this.props
+    const { teams, updateTeam, submitTeamScoreToDB, toggleShowAnswers, isShowingAnswers, updateCurrentQuestion } = this.props
 
     if (teams) {
         const teamKeys = Object.keys(teams)
@@ -74,6 +74,7 @@ function updateTeams() {
     }
 
     toggleShowAnswers(isShowingAnswers)
+    this.setState({ questionText: ''}, () => { updateCurrentQuestion(this.state.questionText) })
 }
 
 function findMultipleWinners(sortedArr) {
@@ -144,6 +145,8 @@ export class HostBar extends Component {
 
                     <input type="textarea" 
                            className='question-input' 
+                           placeholder="Enter Question"
+                           value={this.state.questionText}
                            onChange={handleChange.bind(this)}
                     />
                     <button className="question-submit-button" 
@@ -161,7 +164,7 @@ export class HostBar extends Component {
                                 onClick={updateTeams.bind(this)}
                                 disabled={isUpdateButtonDisabled}
                         >
-                            Update Scores
+                            Update Game
                         </button>
                         <button className="show-answers-button"
                                 onClick={showAnswers.bind(this)}
