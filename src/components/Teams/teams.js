@@ -55,14 +55,15 @@ export class Teams extends Component {
     render() {
         const { teams } = this.state
         const { isShowingAnswers, parentId, currentQuestion } = this.props
+        const parentNotAdmin = (!parentId || parentId !== 'admin')
         return (
             <section className="teams-view">
                 { 
-                    (!parentId || parentId !== 'admin') && 
+                    parentNotAdmin && 
                     <Timer parentId="teams" />
                 }
                 {
-                    currentQuestion &&
+                    (parentNotAdmin && currentQuestion) &&
                     <span className="current-question">
                         {`Current Question: ${currentQuestion}`}
                     </span>
