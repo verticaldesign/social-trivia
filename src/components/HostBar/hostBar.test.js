@@ -2,7 +2,7 @@ import { expect } from 'code'
 import { shallow } from 'enzyme'
 import sinon from 'sinon'
 import React from 'react'
-import { HostBar } from './HostBar'
+import { HostBar } from './hostBar'
 
 describe('Given `HostBar`' ,() => {
 

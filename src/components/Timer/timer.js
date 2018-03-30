@@ -17,7 +17,7 @@ const TIMER_TICK = 1000
 function handleControlTimer(isTimerRunning) {
 
     this.props.controlTimer(isTimerRunning)
-
+    
     if (isTimerRunning) {
         if (this.props.currentTime > 0) {
             const intervalId = setInterval(() => this.props.decrementTimer(this.props.currentTime), TIMER_TICK)
@@ -69,7 +69,8 @@ function tensionColor(num) {
 export class Timer extends Component {
 
     state = {
-        currentTime: this.props.currentTime || 0
+        currentTime: this.props.currentTime || 0,
+        intervalId: undefined
     }
 
     componentDidMount() {
@@ -82,12 +83,15 @@ export class Timer extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.timer !== this.props.timer) {
-            nextProps.currentTime !== this.props.currentTime &&
-            this.setState({ currentTime: nextProps.currentTime })
+
+            if(nextProps.currentTime !== this.props.currentTime) {
+                this.setState({ currentTime: nextProps.currentTime })
+            }
             
-            nextProps.currentTime <=0 && 
-            this.state.intervalId && 
-            clearInterval(this.state.intervalId)
+            if(nextProps.currentTime <=0 && this.state.intervalId) {
+                clearInterval(this.state.intervalId)
+                this.setState({ intervalId: undefined })
+            }
         }
     }
 
