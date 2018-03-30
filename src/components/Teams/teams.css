@@ -55,4 +55,9 @@
 .team-list-item.answered-first {
   background: #ffc107;
 }
+
+.teams-view .current-question {
+  font-weight: bold;
+  font-size: 36px;
+}
 /*# sourceMappingURL=teams.css.map */
