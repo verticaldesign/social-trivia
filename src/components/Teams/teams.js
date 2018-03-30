@@ -1,9 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchTeamsFromDB, fetchIsShowingAnswers, updateTeam } from '../../actions/teams'
+import { fetchTeamsFromDB, fetchIsShowingAnswers, updateTeam, submitTeamScoreToDB } from '../../actions/teams'
 import { fetchCurrentQuestionFromDB } from '../../actions/question'
 import Timer from '../Timer/timer'
 import './teams.css';
+
+function updateTeamScore(scoreChange, team) {
+    this.props.updateTeam(scoreChange, team.id)
+
+    this.props.submitTeamScoreToDB(team.score, team.id, scoreChange)
+}
 
 export class Teams extends Component {
 
@@ -54,7 +60,7 @@ export class Teams extends Component {
 
     render() {
         const { teams } = this.state
-        const { isShowingAnswers, parentId, currentQuestion, updateTeam } = this.props
+        const { isShowingAnswers, parentId, currentQuestion } = this.props
         const parentNotAdmin = (!parentId || parentId !== 'admin')
         const correctAnswer = !!this.props.teams['admin'] && this.props.teams['admin'].answer
         return (
@@ -101,9 +107,9 @@ export class Teams extends Component {
                                                 <span className="team-score">{team.score || 0}</span>
                                             ) : (
                                                 <span className="team-score">
-                                                    <button className="button decrement-team-score-button" onClick={() => { updateTeam(-1, team.id) }}>-</button>
+                                                    <button className="button decrement-team-score-button" onClick={updateTeamScore.bind(this, -1, team)}>-</button>
                                                         {team.score || 0}       
-                                                    <button className="button increment-team-score-button" onClick={() => { updateTeam(1, team.id) }}>+</button>    
+                                                    <button className="button increment-team-score-button" onClick={updateTeamScore.bind(this, 1, team)}>+</button>    
                                                 </span>                                                                                         
                                             )}
                                         </div>
@@ -128,4 +134,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { fetchTeamsFromDB, fetchIsShowingAnswers, fetchCurrentQuestionFromDB, updateTeam })(Teams)
+export default connect(mapStateToProps, { fetchTeamsFromDB, fetchIsShowingAnswers, fetchCurrentQuestionFromDB, updateTeam, submitTeamScoreToDB })(Teams)
