@@ -2,7 +2,7 @@ import { expect } from 'code'
 import { shallow } from 'enzyme'
 import sinon from 'sinon'
 import React from 'react'
-import { Teams } from './Teams'
+import { Teams } from './teams'
 
 const numberOfTeams = 6
 

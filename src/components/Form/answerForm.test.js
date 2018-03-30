@@ -2,7 +2,7 @@ import { expect } from 'code'
 import { shallow } from 'enzyme'
 import sinon from 'sinon'
 import React from 'react'
-import { AnswerForm } from './AnswerForm'
+import { AnswerForm } from './answerForm'
 
 describe('Given `AnswerForm`' ,() => {
     let sandbox

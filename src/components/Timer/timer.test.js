@@ -2,7 +2,7 @@ import { expect } from 'code'
 import { shallow } from 'enzyme'
 import sinon from 'sinon'
 import React from 'react'
-import { Timer } from './Timer'
+import { Timer } from './timer'
 
 describe('Given `Timer`', () => {
 
@@ -14,11 +14,17 @@ describe('Given `Timer`', () => {
         updateTimerSpy,
         decrementTimerSpy,
         fetchTimerSpy,
-        createTimerSpy
+        createTimerSpy,
+        clearIntervalSpy
 
     const currentTime = 60
     const mockDefaultTime = 40
-    
+    const mockDefaultTimer = {
+        currentTime: 60,
+        defaultTime: 60,
+        isTimerRunning: false
+    }
+
     function requiredProps(overrides= {}) {
         return {
             currentTime,
@@ -30,6 +36,7 @@ describe('Given `Timer`', () => {
             createTimer: createTimerSpy,
             isTimerRunning: false,
             parentId: 'admin',
+            clearInterval: clearIntervalSpy,
             ...overrides
         }
     }
@@ -47,6 +54,7 @@ describe('Given `Timer`', () => {
         decrementTimerSpy = sandbox.spy()
         createTimerSpy = sandbox.spy()
         fetchTimerSpy = sandbox.spy()
+        clearIntervalSpy = sandbox.spy()
         component = renderComponent()
     })
 
@@ -159,6 +167,15 @@ describe('Given `Timer`', () => {
     
                     })
     
+                    it('should clear intervalId if the timer is not running', () => {
+                        
+                        expect(component.state().intervalId).not.to.be.undefined()
+
+                        component = renderComponent({ isTimerRunning: false })
+
+                        expect(component.state().intervalId).to.be.undefined()
+                        
+                    })
                 })
     
             })
@@ -233,4 +250,35 @@ describe('Given `Timer`', () => {
 
     })
     
+
+    describe('When componentWillReceiveProps() is called', () => {
+
+        beforeEach(() => {
+
+            component.setState({ timer: mockDefaultTimer, currentTime: 40, intervalId: 1 })
+            component.setProps({ timer: mockDefaultTimer, currentTime: 40, intervalId: 1 })
+        })
+
+        it('should update currentTime if there were changes', () => {
+
+            expect(component.state().currentTime).to.equal(40)
+        })
+
+        it('should clear the intervalId when timer is at 0', () => {
+
+            const timerTest = {
+                currentTime: 0,
+                defaultTime: 60,
+                isTimerRunning: false
+            }
+
+            component.setState({ timer: timerTest, currentTime: 0, intervalId: 2 })
+
+            expect(component.state().intervalId).not.to.be.undefined();
+
+            component.setProps({ timer: timerTest, currentTime: 0, intervalId: 2 })
+
+            expect(component.state().intervalId).to.be.undefined();
+        })
+    })
 })
