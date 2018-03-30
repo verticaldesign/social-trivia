@@ -145,7 +145,7 @@ export class HostBar extends Component {
 
                     <input type="textarea" 
                            className='question-input' 
-                           placeholder="Enter Question"
+                           placeholder="Enter question"
                            value={this.state.questionText}
                            onChange={handleChange.bind(this)}
                     />
