@@ -1,9 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchTeamsFromDB, fetchIsShowingAnswers } from '../../actions/teams'
+import { fetchTeamsFromDB, fetchIsShowingAnswers, updateTeam, submitTeamScoreToDB } from '../../actions/teams'
 import { fetchCurrentQuestionFromDB } from '../../actions/question'
 import Timer from '../Timer/timer'
 import './teams.css';
+
+function updateTeamScore(scoreChange, team) {
+    this.props.updateTeam(scoreChange, team.id)
+
+    this.props.submitTeamScoreToDB(team.score, team.id, scoreChange)
+}
 
 export class Teams extends Component {
 
@@ -56,6 +62,7 @@ export class Teams extends Component {
         const { teams } = this.state
         const { isShowingAnswers, parentId, currentQuestion } = this.props
         const parentNotAdmin = (!parentId || parentId !== 'admin')
+        const correctAnswer = !!this.props.teams['admin'] && this.props.teams['admin'].answer
         return (
             <section className="teams-view">
                 { 
@@ -69,9 +76,9 @@ export class Teams extends Component {
                     </span>
                 }
                 { 
-                    (isShowingAnswers && this.props.teams['admin'].answer) && 
+                    (isShowingAnswers && correctAnswer) && 
                     <span className="team-answer correct-answer">
-                        {`Correct Answer: ${this.props.teams['admin'].answer}`}
+                        {`Correct Answer: ${correctAnswer}`}
                     </span> 
                 }
                 <ul className="team-list">
@@ -96,7 +103,15 @@ export class Teams extends Component {
                                         </div>
                                         <div className={'label-group team-score-group'}>
                                             <label>Score: </label>
-                                            <span className="team-score">{team.score || 0}</span>
+                                            { parentNotAdmin ? (
+                                                <span className="team-score">{team.score || 0}</span>
+                                            ) : (
+                                                <span className="team-score">
+                                                    <button className="button decrement-team-score-button" onClick={updateTeamScore.bind(this, -1, team)}>-</button>
+                                                        {team.score || 0}       
+                                                    <button className="button increment-team-score-button" onClick={updateTeamScore.bind(this, 1, team)}>+</button>    
+                                                </span>                                                                                         
+                                            )}
                                         </div>
                                     </li>
                                 )
@@ -119,4 +134,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { fetchTeamsFromDB, fetchIsShowingAnswers, fetchCurrentQuestionFromDB })(Teams)
+export default connect(mapStateToProps, { fetchTeamsFromDB, fetchIsShowingAnswers, fetchCurrentQuestionFromDB, updateTeam, submitTeamScoreToDB })(Teams)

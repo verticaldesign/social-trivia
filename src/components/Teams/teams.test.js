@@ -12,7 +12,8 @@ describe('Given `Teams`' ,() => {
         sandbox,
         fetchTeamsFromDBSpy,
         fetchIsShowingAnswersSpy,
-        fetchCurrentQuestionFromDBSpy
+        fetchCurrentQuestionFromDBSpy,
+        updateTeamSpy
 
     const mockTeamsProp = {
         'admin': { answer: 1, score: 0 },
@@ -30,6 +31,7 @@ describe('Given `Teams`' ,() => {
             fetchTeamsFromDB: fetchTeamsFromDBSpy,
             fetchIsShowingAnswers: fetchIsShowingAnswersSpy,
             fetchCurrentQuestionFromDB: fetchCurrentQuestionFromDBSpy,
+            updateTeam: updateTeamSpy,
             isShowingAnswers: false,
             teams: mockTeamsProp,
             ...overrides
@@ -47,6 +49,7 @@ describe('Given `Teams`' ,() => {
         fetchTeamsFromDBSpy = sandbox.spy()
         fetchIsShowingAnswersSpy = sandbox.spy()
         fetchCurrentQuestionFromDBSpy = sandbox.spy()
+        updateTeamSpy = sandbox.spy()
         component = renderComponent()
         component.setState({ teams: teamsInState })
     })
@@ -83,9 +86,15 @@ describe('Given `Teams`' ,() => {
 
     describe('Given `isShowingAnswers` is true', () => {
 
-        it('should show an answer for all teams', () => {        
+        describe('Given `correctAnswer` exists', () => {
 
-            expect(component.find('.team-answer').length).to.equal(component.state().teams.length)
+            it('should render a `span` with a specific class name that contains the correct answer', () => {
+
+                component = renderComponent({ isShowingAnswers: true, correctAnswer: 1 })
+
+                expect(component.find('.correct-answer').text()).to.equal('Correct Answer: 1')
+
+            })
 
         })
 
@@ -107,19 +116,63 @@ describe('Given `Teams`' ,() => {
 
         describe('Given `li`', () => {
 
-            it('should have a key set to each team id', () => {
+            describe('And the `parentId` is `admin`', () => {
 
-                const teamListItem = component.find('.team-list-item')
+                it('should have a key set to each team id', () => {
+    
+                    const teamListItem = component.find('.team-list-item')
+    
+                    expect(teamListItem.first().key()).to.equal(component.state().teams[0].id)
+    
+                })
+    
+                it('should contain s `span` elements with proper class names', () => {            
+                    
+                    const teamListItem = component.find('.team-list-item')   
+    
+                    expect(teamListItem.first().find('span').length).to.equal(2)
+    
+                })
+    
+                it('should render a `span` with a team answer for every team', () => {
+    
+                    expect(component.find('.team-answer').length).to.equal(component.state().teams.length)
+    
+                })
 
-                expect(teamListItem.first().key()).to.equal(component.state().teams[0].id)
+                it('should contain a `span` to show each team score', () => {
 
-            })
+                    expect(component.find('.team-score').length).to.equal(component.state().teams.length)
 
-            it('should contain s `span` elements with proper class names', () => {            
-                
-                const teamListItem = component.find('.team-list-item')   
+                    describe('Given `.team-score`', () => {
 
-                expect(teamListItem.first().find('span').length).to.equal(2)
+                        it('should contain a `decrement-team-score-button` and a `increment-team-score-button`', () => {
+
+                            expect(component.find('decrement-team-score-button').length).to.equal(component.state().teams.length)
+
+                            expect(component.find('increment-team-score-button').length).to.equal(component.state().teams.length)                            
+
+                        })
+
+                        describe('When either button is clicked', () => {
+
+                            it('should call `updateTeam`', () => {
+
+                                component.find('decrement-team-score-button').simulate('click')
+
+                                sinon.assert.calledOnce(updateTeamSpy)
+
+                                component.find('increment-team-score-button').simulate('click')
+
+                                sinon.assert.calledTwice(updateTeamSpy)                                
+
+                            })
+
+                        })
+
+                    })
+
+                })
 
             })
 

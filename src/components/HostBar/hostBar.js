@@ -176,7 +176,7 @@ export class HostBar extends Component {
                         <Link className='button' to="/teams" target="_blank" >Game View</Link>
                     </div>
 
-                    { (!!teams['admin'] && !!teams['admin'].answer && !isShowingAnswers) && 
+                    { (!!teams && !!teams['admin'] && !!teams['admin'].answer && !isShowingAnswers) && 
                     <span className="correct-answer">{`Correct Answer: ${teams['admin'].answer}`}</span> }
                 </div>
 
