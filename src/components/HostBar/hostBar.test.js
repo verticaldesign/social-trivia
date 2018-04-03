@@ -147,11 +147,6 @@ describe('Given `HostBar`' ,() => {
 
             describe('when the `button` is clicked', () => {
 
-                beforeEach(() => {
-
-
-                })
-
                 it('should call `updateTeam` and `toggleShowAnswers`', () => {
 
                     component = renderComponent({ updateTeam: updateTeamSpy })
@@ -164,7 +159,7 @@ describe('Given `HostBar`' ,() => {
                 })  
 
                 describe('when there are teams with no perfect answer', () => {
-                   
+            
                     it('should find multiple winners if there are any', () => {
 
                         let returnTeam, winnersMethod, sortedTeams, noExactAnswerTeams

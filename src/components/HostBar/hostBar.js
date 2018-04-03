@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { updateTeam, submitTeamScoreToDB, fetchTeamsFromDB, toggleShowAnswers, deleteTeam } from '../../actions/teams'
+import { updateTeam, fetchTeamsFromDB, toggleShowAnswers, deleteTeam } from '../../actions/teams'
 import { updateCurrentQuestion } from '../../actions/question'
 import { resetTimer } from '../../actions/timer'
 import { database } from '../../data/firebase'
@@ -15,7 +15,7 @@ const millisecondsInADay = 86400000;
 
 function updateTeams() {
 
-    const { teams, toggleShowAnswers, isShowingAnswers, updateCurrentQuestion } = this.props
+    const { teams, toggleShowAnswers, isShowingAnswers, updateCurrentQuestion, updateTeam } = this.props
 
     if (teams) {
         
@@ -30,9 +30,9 @@ function updateTeams() {
         
                 const teamsWithNoPoints = filterMatchesFromArray(teamKeys, teamsWithPerfectAnswers);
         
-                updateTeamListScores.call(this, teamsWithPerfectAnswers, 1)
+                teamsWithPerfectAnswers.forEach( (team) => { updateTeam((teams[team].score + 1), team) } )
         
-                updateTeamListScores.call(this, teamsWithNoPoints, 0)
+                teamsWithNoPoints.forEach( (team) => { updateTeam((teams[team].score + 0), team) } )
     
             } else {           
         
@@ -47,13 +47,13 @@ function updateTeams() {
         
                     const teamsWithNoPoints = filterMatchesFromArray(teamKeys, teamsWithWinningAnswers);
         
-                    updateTeamListScores.call(this, teamsWithWinningAnswers, 1)
+                    teamsWithWinningAnswers.forEach( (team) => { updateTeam((teams[team].score + 1), team) } )
         
-                    updateTeamListScores.call(this, teamsWithNoPoints, 0)
+                    teamsWithNoPoints.forEach( (team) => { updateTeam((teams[team].score + 0), team) } )
         
                 } else {                                       
     
-                    updateTeamListScores.call(this, teamKeys, 0);
+                    teamKeys.forEach( (team) => { updateTeam((teams[team].score + 0), team) } )
     
                 }
             }
@@ -72,14 +72,6 @@ function findMultipleWinners(sortedArr) {
             return acc
         }, [])
     }
-}
-
-function updateTeamListScores(teamList, score) {
-    const { updateTeam, submitTeamScoreToDB, teams } = this.props;
-    teamList.forEach((team) => { 
-        updateTeam(score, team); 
-        submitTeamScoreToDB(teams[team].score, team, score); 
-    })
 }
 
 function showAnswers() {
@@ -194,8 +186,7 @@ function mapStateToProps(state) {
 export default connect(
     mapStateToProps, { 
         updateTeam, 
-        resetTimer, 
-        submitTeamScoreToDB, 
+        resetTimer,  
         fetchTeamsFromDB, 
         toggleShowAnswers, 
         deleteTeam,
