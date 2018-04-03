@@ -5,6 +5,7 @@ import { updateTeam, submitTeamScoreToDB, fetchTeamsFromDB, toggleShowAnswers, d
 import { updateCurrentQuestion } from '../../actions/question'
 import { resetTimer } from '../../actions/timer'
 import { database } from '../../data/firebase'
+import { filterMatchesFromArray } from '../../utils/utils'
 import AnswerForm from '../Form/answerForm'
 import Timer from '../Timer/timer'
 import Teams from '../Teams/teams'
@@ -14,59 +15,45 @@ const millisecondsInADay = 86400000;
 
 function updateTeams() {
 
-    const { teams, updateTeam, submitTeamScoreToDB, toggleShowAnswers, isShowingAnswers, updateCurrentQuestion } = this.props
+    const { teams, toggleShowAnswers, isShowingAnswers, updateCurrentQuestion } = this.props
 
     if (teams) {
-        const teamKeys = Object.keys(teams)
+        
+        const teamKeys = Object.keys(teams).filter(teamKey => teamKey !== 'admin')
         const expectedAnswer = teams['admin'].answer
 
         if (!!expectedAnswer) {
 
-            const teamsWithPerfectAnswers = teamKeys.filter((team) => {
-                return team !== 'admin' &&
-                    teams[team].answer === expectedAnswer
-            })
+            const teamsWithPerfectAnswers = teamKeys.filter( (teamId) => teams[teamId].answer === expectedAnswer )
         
             if (teamsWithPerfectAnswers.length) {
         
-                let teamsWithNoPoints = teamKeys.filter((team) => {
-                    return !teamsWithPerfectAnswers.find((item) => {
-                        return item === team
-                    })
-                })
+                const teamsWithNoPoints = filterMatchesFromArray(teamKeys, teamsWithPerfectAnswers);
         
-                teamsWithPerfectAnswers.forEach((team) => { updateTeam(1, team); submitTeamScoreToDB(teams[team].score, team, 1) })
+                updateTeamListScores.call(this, teamsWithPerfectAnswers, 1)
         
-                teamsWithNoPoints.forEach((team) => { updateTeam(0, team); submitTeamScoreToDB(teams[team].score, team, 0) })
+                updateTeamListScores.call(this, teamsWithNoPoints, 0)
     
             } else {           
         
-                const sortedAndFilteredTeamsByAnswer = teamKeys.filter((team) => {
-                    return team !== 'admin' && teams[team].isSubmitted && parseFloat(teams[team].answer) <= parseFloat(expectedAnswer)
-                })              
-                .sort((a, b) => {
-                    return teams[b].answer - teams[a].answer 
-                })
-                .map((teamId) => { return { ...this.props.teams[teamId], id: teamId } })
-        
+                const sortedAndFilteredTeamsByAnswer = teamKeys
+                .filter( (teamKey) => teams[teamKey].isSubmitted && parseFloat(teams[teamKey].answer) <= parseFloat(expectedAnswer) )              
+                .sort( (a, b) => teams[b].answer - teams[a].answer )
+                .map( (teamId) => ({ ...this.props.teams[teamId], id: teamId }) )
                 
                 const teamsWithWinningAnswers = findMultipleWinners(sortedAndFilteredTeamsByAnswer)
         
                 if (teamsWithWinningAnswers && teamsWithWinningAnswers.length) {                        
         
-                    const teamsWithNoPoints = teamKeys.filter((team) => {
-                        return !teamsWithWinningAnswers.find((item) => {
-                            return item === team
-                        })
-                    })
+                    const teamsWithNoPoints = filterMatchesFromArray(teamKeys, teamsWithWinningAnswers);
         
-                    teamsWithNoPoints.forEach((team) => { updateTeam(0, team); submitTeamScoreToDB(teams[team].score, team, 0) })
+                    updateTeamListScores.call(this, teamsWithWinningAnswers, 1)
         
-                    teamsWithWinningAnswers.forEach((team) => { updateTeam(1, team); submitTeamScoreToDB(teams[team].score, team, 1) })
+                    updateTeamListScores.call(this, teamsWithNoPoints, 0)
         
                 } else {                                       
     
-                    teamKeys.forEach((team) => { updateTeam(0, team); submitTeamScoreToDB(teams[team].score, team, 0) })
+                    updateTeamListScores.call(this, teamKeys, 0);
     
                 }
             }
@@ -85,6 +72,14 @@ function findMultipleWinners(sortedArr) {
             return acc
         }, [])
     }
+}
+
+function updateTeamListScores(teamList, score) {
+    const { updateTeam, submitTeamScoreToDB, teams } = this.props;
+    teamList.forEach((team) => { 
+        updateTeam(score, team); 
+        submitTeamScoreToDB(teams[team].score, team, score); 
+    })
 }
 
 function showAnswers() {
