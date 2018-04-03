@@ -8,7 +8,7 @@ describe('Given `CreateTeam`', () => {
 
     let component,
         sandbox,
-        createTeamInDBMock,
+        createTeamSpy,
         fetchTeamsFromDBMock
 
     const mockTeams = {
@@ -29,7 +29,7 @@ describe('Given `CreateTeam`', () => {
 
     function requiredProps(overrides = {}) {
         return {
-            createTeamInDB: createTeamInDBMock,
+            createTeam: createTeamSpy,
             fetchTeamsFromDB: fetchTeamsFromDBMock,
             teams: mockTeams,
             ...overrides
@@ -44,7 +44,7 @@ describe('Given `CreateTeam`', () => {
 
     beforeEach(() => {
         sandbox = sinon.createSandbox()
-        createTeamInDBMock = sandbox.spy()
+        createTeamSpy = sandbox.spy()
         fetchTeamsFromDBMock = sandbox.spy()
         component = renderComponent()
     })
@@ -92,7 +92,7 @@ describe('Given `CreateTeam`', () => {
                     preventDefault: () => {}
                 })
     
-                sinon.assert.calledOnce(createTeamInDBMock)
+                sinon.assert.calledOnce(createTeamSpy)
     
             })
 
@@ -116,6 +116,5 @@ describe('Given `CreateTeam`', () => {
 
         })
 
-       
     })
 })
