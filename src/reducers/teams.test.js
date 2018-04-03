@@ -6,6 +6,7 @@ const mockAnswer = 10;
 const mockId = 'team-1';
 const mockTimeStamp = Date.now();
 const mockScore = 10;
+const mockNewScore = 1;
 const initialScore = 0;
 const mockIsSubmitted = false;
 const initialState = {
@@ -47,9 +48,9 @@ describe('Given `teamsReducer`', () => {
 
     it('should handle UPDATE_TEAM', () => {
 
-        const expectedState = {  [mockId]:  { score: mockScore, answer: 0, answeredAt: 0, createdAt: mockTimeStamp, isSubmitted: mockIsSubmitted  }  };
+        const expectedState = {  [mockId]:  { newScore: mockNewScore, answer: 0, answeredAt: 0, createdAt: mockTimeStamp, isSubmitted: mockIsSubmitted  }  };
 
-        expect(teamsReducer(initialState, { type: types.UPDATE_TEAM, score: mockScore, id: mockId, isSubmitted: mockIsSubmitted})).to.equal(expectedState);
+        expect(teamsReducer(initialState, { type: types.UPDATE_TEAM, score: mockNewScore, id: mockId, isSubmitted: mockIsSubmitted})).to.equal(expectedState);
 
     });
 
