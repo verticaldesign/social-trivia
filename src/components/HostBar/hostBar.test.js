@@ -244,9 +244,7 @@ describe('Given `HostBar`' ,() => {
 
     describe('When the button is clicked', () => {
 
-        it('should call `showAnswers`', () => {         
-
-            //component = renderComponent({ teams })
+        it('should call `showAnswers`', () => {      
 
             component.find('.show-answers-button').simulate('click')
             
