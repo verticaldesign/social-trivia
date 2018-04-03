@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createTeamInDB, fetchTeamsFromDB } from '../../actions/teams';
+import { createTeam, fetchTeamsFromDB } from '../../actions/teams';
 import {
     Redirect,
     withRouter
@@ -21,7 +21,7 @@ function handleSubmit(e) {
         ) : (
             this.setState(
                 { currentInput: '', teamId, redirectToReferrer: true }, 
-                () => { this.props.createTeamInDB(teamId, Date.now()) }
+                () => { this.props.createTeam(teamId, Date.now()) }
             )
         )
     }
@@ -82,4 +82,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default withRouter(connect(mapStateToProps, { createTeamInDB, fetchTeamsFromDB })(CreateTeam));
+export default withRouter(connect(mapStateToProps, { createTeam, fetchTeamsFromDB })(CreateTeam));
