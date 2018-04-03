@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchTeamsFromDB, fetchIsShowingAnswers, updateTeam, submitTeamScoreToDB } from '../../actions/teams'
+import { fetchTeamsFromDB, fetchIsShowingAnswers, updateTeam } from '../../actions/teams'
 import { fetchCurrentQuestionFromDB } from '../../actions/question'
 import Timer from '../Timer/timer'
 import './teams.css';
 
 function updateTeamScore(scoreChange, team) {
     this.props.updateTeam(scoreChange, team.id)
-
-    this.props.submitTeamScoreToDB(team.score, team.id, scoreChange)
 }
 
 export class Teams extends Component {
@@ -134,4 +132,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { fetchTeamsFromDB, fetchIsShowingAnswers, fetchCurrentQuestionFromDB, updateTeam, submitTeamScoreToDB })(Teams)
+export default connect(mapStateToProps, { fetchTeamsFromDB, fetchIsShowingAnswers, fetchCurrentQuestionFromDB, updateTeam })(Teams)

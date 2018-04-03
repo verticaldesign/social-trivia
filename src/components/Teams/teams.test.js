@@ -15,7 +15,6 @@ describe('Given `Teams`' ,() => {
         fetchCurrentQuestionFromDBSpy,
         updateTeamSpy,
         updateTeamScoreSpy,
-        submitTeamScoreToDBSpy,
         parentId
 
     const mockTeamsProp = {
@@ -36,7 +35,6 @@ describe('Given `Teams`' ,() => {
             fetchCurrentQuestionFromDB: fetchCurrentQuestionFromDBSpy,
             updateTeam: updateTeamSpy,
             updateTeamScore: updateTeamScoreSpy,
-            submitTeamScoreToDB: submitTeamScoreToDBSpy,
             isShowingAnswers: false,
             teams: mockTeamsProp,
             parentId: 'admin',
@@ -57,7 +55,6 @@ describe('Given `Teams`' ,() => {
         fetchCurrentQuestionFromDBSpy = sandbox.spy()
         updateTeamSpy = sandbox.spy()
         updateTeamScoreSpy = sandbox.spy()
-        submitTeamScoreToDBSpy = sandbox.spy()
         component = renderComponent()
         component.setState({ teams: teamsInState })
     })
@@ -217,12 +214,10 @@ describe('Given `Teams`' ,() => {
                                 component.find('.decrement-team-score-button').first().simulate('click')
     
                                 sinon.assert.calledOnce(updateTeamSpy)
-                                sinon.assert.calledOnce(submitTeamScoreToDBSpy)
     
                                component.find('.increment-team-score-button').first().simulate('click')
     
-                                sinon.assert.calledTwice(updateTeamSpy)  
-                                sinon.assert.calledTwice(submitTeamScoreToDBSpy)                                
+                                sinon.assert.calledTwice(updateTeamSpy)                              
     
                             })
                         })    
