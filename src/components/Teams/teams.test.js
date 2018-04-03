@@ -46,7 +46,7 @@ describe('Given `Teams`' ,() => {
 
     function renderComponent(props=requiredProps()) {
         const newProps = requiredProps(props)
-        return shallow(<Teams {...props}/>)
+        return shallow(<Teams {...newProps }/>)
 
     }
 
