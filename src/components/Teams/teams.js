@@ -5,10 +5,6 @@ import { fetchCurrentQuestionFromDB } from '../../actions/question'
 import Timer from '../Timer/timer'
 import './teams.css';
 
-function updateTeamScore(scoreChange, team) {
-    this.props.updateTeam(scoreChange, team.id)
-}
-
 export class Teams extends Component {
 
     state = {
@@ -58,7 +54,7 @@ export class Teams extends Component {
 
     render() {
         const { teams } = this.state
-        const { isShowingAnswers, parentId, currentQuestion } = this.props
+        const { isShowingAnswers, parentId, currentQuestion, updateTeam } = this.props
         const parentNotAdmin = (!parentId || parentId !== 'admin')
         const correctAnswer = !!this.props.teams['admin'] && this.props.teams['admin'].answer
         return (
@@ -105,9 +101,9 @@ export class Teams extends Component {
                                                 <span className="team-score">{team.score || 0}</span>
                                             ) : (
                                                 <span className="team-score">
-                                                    <button className="button decrement-team-score-button" onClick={updateTeamScore.bind(this, -1, team)}>-</button>
+                                                    <button className="button decrement-team-score-button" onClick={ () => { updateTeam((team.score - 1), team.id) } }>-</button>
                                                         {team.score || 0}       
-                                                    <button className="button increment-team-score-button" onClick={updateTeamScore.bind(this, 1, team)}>+</button>    
+                                                    <button className="button increment-team-score-button" onClick={ () => { updateTeam((team.score + 1), team.id) } }>+</button>    
                                                 </span>                                                                                         
                                             )}
                                         </div>
