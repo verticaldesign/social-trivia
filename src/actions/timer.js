@@ -4,43 +4,74 @@ import { database } from '../data/firebase'
 const timer = database.ref('timer/')
 
 export function createTimer() {
-    timer.set({ isTimerRunning: false, currentTime: 60, defaultTime: 60 })
-    return {
-        type: types.CREATE_TIMER,
-        isTimerRunning: false
-    }
+    return dispatch => {
+        return timer.set({ 
+            isTimerRunning: false, 
+            currentTime: 60, 
+            defaultTime: 60 
+        })
+        .then(() => {
+            dispatch({
+                type: types.CREATE_TIMER,
+                isTimerRunning: false
+            })
+        })
+    };
 }
 
 export function updateTimer(setTime) {
-    timer.update({ isTimerRunning: false, currentTime: setTime, defaultTime: setTime })
-    return {
-        type: types.UPDATE_TIMER,
-        setTime
-    }
+    return dispatch => {
+        return timer.update({ 
+            isTimerRunning: false, 
+            currentTime: setTime, 
+            defaultTime: setTime 
+        })
+        .then(() => {
+            dispatch({
+                type: types.UPDATE_TIMER,
+                setTime
+            })
+        })
+    };
 } 
 
 export function controlTimer(isTimerRunning) {
-   timer.update({ isTimerRunning })
-   return {
-        type: types.CONTROL_TIMER,
-        isTimerRunning
-    }
+    return dispatch => {
+        return timer.update({ isTimerRunning })
+        .then(() => {
+            dispatch({
+                type: types.CONTROL_TIMER,
+                isTimerRunning
+            })
+        })
+    };
 }
 
 export function resetTimer(defaultTime) {
-    timer.update({ isTimerRunning: false, currentTime: defaultTime })
-    return {
-        type: types.RESET_TIMER,
-        currentTime: defaultTime
-    }
+    return dispatch => {
+        return timer.update({ 
+            isTimerRunning: false, 
+            currentTime: defaultTime 
+        })
+        .then(() => {
+            dispatch({
+                type: types.RESET_TIMER,
+                currentTime: defaultTime
+            })
+        })
+    };
 } 
 
 export function decrementTimer(timeLeft) {
-    timer.update({ currentTime: timeLeft - 1 })
-    return {
-        type: types.DECREMENT_TIMER,
-        timeLeft
-    }
+    return dispatch => {
+        return timer.update({ currentTime: timeLeft - 1 })
+        .then(() => {
+            dispatch({
+                type: types.DECREMENT_TIMER,
+                timeLeft
+            })
+        })
+    };
 } 
 
 export function fetchTimer() {

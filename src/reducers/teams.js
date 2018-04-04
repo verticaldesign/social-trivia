@@ -28,7 +28,7 @@ function updateTeam(state, action) {
         ...state,
         answer: 0,
         answeredAt: 0,
-        score: (state.score + action.score),
+        score: action.newScore,
         isSubmitted: false
     }
 }

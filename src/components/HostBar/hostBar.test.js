@@ -9,7 +9,6 @@ describe('Given `HostBar`' ,() => {
     let component,
         sandbox,
         updateTeamSpy,
-        submitTeamSpy,
         fetchTeamsFromDBSpy,
         toggleShowAnswersSpy,
         setCurrentQuestionSpy,
@@ -26,7 +25,6 @@ describe('Given `HostBar`' ,() => {
     function requiredProps(overrides= {}) {
         return {
             updateTeam: updateTeamSpy,
-            submitTeamScoreToDB: submitTeamSpy,
             fetchTeamsFromDB: fetchTeamsFromDBSpy,
             toggleShowAnswers: toggleShowAnswersSpy,
             updateCurrentQuestion: setCurrentQuestionSpy,
@@ -46,7 +44,6 @@ describe('Given `HostBar`' ,() => {
     beforeEach(() => {
         sandbox = sinon.createSandbox()
         updateTeamSpy = sandbox.spy()
-        submitTeamSpy = sandbox.spy()
         fetchTeamsFromDBSpy = sandbox.spy()
         toggleShowAnswersSpy = sandbox.spy()
         setCurrentQuestionSpy = sandbox.spy()
@@ -150,11 +147,6 @@ describe('Given `HostBar`' ,() => {
 
             describe('when the `button` is clicked', () => {
 
-                beforeEach(() => {
-
-
-                })
-
                 it('should call `updateTeam` and `toggleShowAnswers`', () => {
 
                     component = renderComponent({ updateTeam: updateTeamSpy })
@@ -167,7 +159,7 @@ describe('Given `HostBar`' ,() => {
                 })  
 
                 describe('when there are teams with no perfect answer', () => {
-                   
+            
                     it('should find multiple winners if there are any', () => {
 
                         let returnTeam, winnersMethod, sortedTeams, noExactAnswerTeams
