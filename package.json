@@ -11,6 +11,7 @@
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-flip-move": "^3.0.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",
@@ -38,7 +39,7 @@
     "collectCoverageFrom": [
       "**/actions/*.js",
       "**/components/**.js",
-      "**/data/*js",      
+      "**/data/*js",
       "**/reducers/*.js"
     ]
   },
@@ -47,4 +48,3 @@
     "node": ">= 6"
   }
 }
-
