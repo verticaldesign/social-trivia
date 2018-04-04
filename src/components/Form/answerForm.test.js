@@ -103,6 +103,21 @@ describe('Given `AnswerForm`' ,() => {
                     
         })
 
+        describe('Given the `button`', () => {
+
+            describe('if the parent is `admin`', () => {
+
+                it('should be `disabled`', () => {
+
+                    const component = renderComponent({ currentTime: 0, id: 'admin' })
+
+                    expect(component.find('Formik').dive().find('.answer-submit-btn').props().disabled).to.be.true();
+
+                })
+
+            })
+
+        })
     })
 
     describe('When teams are present', () => {
