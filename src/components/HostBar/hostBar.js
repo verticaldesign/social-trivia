@@ -22,6 +22,11 @@ function updateTeams() {
         const teamKeys = Object.keys(teams).filter(teamKey => teamKey !== 'admin')
         const expectedAnswer = teams['admin'].answer
 
+        const fastestAnswer = teamKeys.reduce((acc, curr) => {
+            if(teams[curr].answeredAt <= acc && teams[curr].answeredAt !== 0){acc = teams[curr].answeredAt}
+            return acc
+        },99999999999999)
+
         if (!!expectedAnswer) {
 
             const teamsWithPerfectAnswers = teamKeys.filter( (teamId) => teams[teamId].answer === expectedAnswer )
@@ -30,7 +35,10 @@ function updateTeams() {
         
                 const teamsWithNoPoints = filterMatchesFromArray(teamKeys, teamsWithPerfectAnswers);
         
-                teamsWithPerfectAnswers.forEach( (team) => { updateTeam((teams[team].score + 1), team) } )
+                teamsWithPerfectAnswers.forEach( (team) => {
+                    const bonus = teams[team].answeredAt === fastestAnswer ? 1 : 0;
+                    updateTeam((teams[team].score + 1 + bonus), team)
+                } )
         
                 teamsWithNoPoints.forEach( (team) => { updateTeam((teams[team].score + 0), team) } )
     
@@ -42,12 +50,15 @@ function updateTeams() {
                 .map( (teamId) => ({ ...this.props.teams[teamId], id: teamId }) )
                 
                 const teamsWithWinningAnswers = findMultipleWinners(sortedAndFilteredTeamsByAnswer)
-        
+
                 if (teamsWithWinningAnswers && teamsWithWinningAnswers.length) {                        
         
                     const teamsWithNoPoints = filterMatchesFromArray(teamKeys, teamsWithWinningAnswers);
         
-                    teamsWithWinningAnswers.forEach( (team) => { updateTeam((teams[team].score + 1), team) } )
+                    teamsWithWinningAnswers.forEach( (team) => {
+                        const bonus = teams[team].answeredAt === fastestAnswer ? 1 : 0;
+                        updateTeam((teams[team].score + 1 + bonus), team)
+                    } )
         
                     teamsWithNoPoints.forEach( (team) => { updateTeam((teams[team].score + 0), team) } )
         
